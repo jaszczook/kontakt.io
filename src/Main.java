@@ -10,6 +10,11 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class Main {
+
+    private static final String GET = "GET";
+    private static final String GIF = "gif";
+    private static final int HTTP_200 = 200;
+
     public static void main(String[] args) {
         String fileName = "hosts_access_log_00.txt";
         Set<String> uniqueGifFilenames = getUniqueGifFilenames(fileName);
@@ -17,8 +22,6 @@ public class Main {
     }
 
     private static Set<String> getUniqueGifFilenames(String fileName) {
-        final String get = "GET";
-        final String gif = "gif";
         final Set<String> gifFilenames = new HashSet<>();
 
         try (Stream<String> linesStream = Files.lines(Paths.get(fileName))) {
@@ -36,10 +39,10 @@ public class Main {
                     String filename = file.getName();
                     int dotIndex = filename.lastIndexOf('.');
 
-                    if (get.equals(requestParts[0]) && // is a GET request
-                            httpStatusCode == 200 && // with HTTP status code 200
+                    if (GET.equals(requestParts[0]) && // is a GET request
+                            httpStatusCode == HTTP_200 && // with HTTP status code 200
                             dotIndex > 0 && // filename contains '.'
-                            gif.equalsIgnoreCase(filename.substring(dotIndex + 1)) // file extension is 'gif' case ignored
+                            GIF.equalsIgnoreCase(filename.substring(dotIndex + 1)) // file extension is 'gif' case ignored
                     ) {
                         gifFilenames.add(filename);
                     }
